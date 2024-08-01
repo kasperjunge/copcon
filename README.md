@@ -1,6 +1,14 @@
 # Copcon
 
-Copcon (Copy Context) is a CLI tool that generates a report of a directory's structure and file contents, then copies it to the clipboard. It's designed to quickly capture and share the context of a project or directory.
+Copcon (Copy Context) is a CLI tool designed to rapidly capture and summarize code context for use in large language model (LLM) based chatbots like Claude and ChatGPT.
+
+Just point the copcon command at a directory, and all the LLM needs to know about your code is copied to your clipboard, ready to fire into ChatGPT with CTRL+V 🐎
+
+## Why Copcon?
+
+- 🚀 **Speed Up Your Workflow**: No more manual explanations of your project structure.
+- 🎯 **Get More Accurate AI Responses**: Provide complete context in seconds.
+- 🧠 **Enhance AI Understanding**: Help AI understand your specific codebase instantly.
 
 ## Features
 
@@ -11,19 +19,11 @@ Copcon (Copy Context) is a CLI tool that generates a report of a directory's str
 - Option to ignore specific directories and files
 - Copies the generated report to the clipboard
 
-## Installation
+## Quick Start
 
-You can install Copcon directly from PyPI:
-
-```
-pip install copcon
-```
-
-Alternatively, if you want to install from source:
-
-1. Clone the repository
-2. Ensure you have Poetry installed
-3. Run `poetry install` in the project directory
+1. Install: `pip install copcon`
+2. Run: `copcon /path/to/your/project`
+3. Paste the result into your AI chat
 
 ## Usage
 
@@ -69,12 +69,6 @@ To set up the development environment:
 1. Ensure you have Python 3.11+ and Poetry installed
 2. Clone the repository
 3. Run `poetry install` to install dependencies
-
-To run tests (once tests are implemented):
-
-```
-poetry run pytest
-```
 
 ## Contributing
 
