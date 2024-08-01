@@ -1,4 +1,4 @@
-# Copcon
+# Copcon 🐎
 
 Copcon (Copy Context) is a CLI tool designed to rapidly capture and summarize code context for use in large language model (LLM) based chatbots like Claude and ChatGPT.
 
