@@ -60,7 +60,7 @@ copcon /path/to/your/directory --ignore-dirs my_ignore_dir --ignore-files my_ign
 
 ## Note
 
-This tool is designed for macOS only, as it uses the `pbcopy` command for clipboard operations.
+This tool is designed for macOS and Windows.
 
 ## Development
 
