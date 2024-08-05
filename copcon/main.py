@@ -3,6 +3,8 @@ from pathlib import Path
 from typing import Optional, List
 import subprocess
 import mimetypes
+import platform
+import sys
 
 app = typer.Typer()
 
@@ -77,7 +79,7 @@ def get_file_content(file_path: Path) -> str:
             mime_type.startswith("text/")
             or mime_type in ["application/json", "application/xml"]
         ):
-            return file_path.read_text()
+            return file_path.read_text(encoding="utf-8", errors="replace")
         else:
             # For binary files, return file information instead of content
             file_size = file_path.stat().st_size
@@ -87,10 +89,22 @@ def get_file_content(file_path: Path) -> str:
 
 
 def copy_to_clipboard(text: str):
-    process = subprocess.Popen(
-        "pbcopy", env={"LANG": "en_US.UTF-8"}, stdin=subprocess.PIPE
-    )
-    process.communicate(text.encode("utf-8"))
+    system = platform.system()
+    if system == "Darwin":  # macOS
+        process = subprocess.Popen(
+            "pbcopy", env={"LANG": "en_US.UTF-8"}, stdin=subprocess.PIPE
+        )
+        process.communicate(text.encode("utf-8"))
+    elif system == "Windows":
+        import win32clipboard
+
+        win32clipboard.OpenClipboard()
+        win32clipboard.EmptyClipboard()
+        win32clipboard.SetClipboardText(text, win32clipboard.CF_UNICODETEXT)
+        win32clipboard.CloseClipboard()
+    else:
+        print(f"Clipboard functionality not supported on {system}")
+        sys.exit(1)
 
 
 @app.command()
