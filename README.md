@@ -58,9 +58,48 @@ You can add more directories or files to ignore using the `--ignore-dirs` and `-
 copcon /path/to/your/directory --ignore-dirs my_ignore_dir --ignore-files my_ignore_file.txt
 ```
 
+## Report Format
+
+Copcon generates a report in the following format:
+
+```
+Directory Structure:
+your_project_name
+├── folder1
+│   ├── file1.py
+│   └── file2.py
+├── folder2
+│   └── file3.py
+└── main.py
+
+File Contents:
+
+File: folder1/file1.py
+----------------------------------------
+[Content of file1.py]
+----------------------------------------
+
+File: folder1/file2.py
+----------------------------------------
+[Content of file2.py]
+----------------------------------------
+
+File: folder2/file3.py
+----------------------------------------
+[Content of file3.py]
+----------------------------------------
+
+File: main.py
+----------------------------------------
+[Content of main.py]
+----------------------------------------
+```
+
+This format provides a clear overview of your project structure followed by the contents of each file, making it easy for AI models to understand your codebase.
+
 ## Note
 
-This tool is designed for macOS only, as it uses the `pbcopy` command for clipboard operations.
+This tool is designed for macOS and Windows.
 
 ## Development
 
