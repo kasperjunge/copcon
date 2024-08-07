@@ -19,6 +19,10 @@ DEFAULT_IGNORE_DIRS = {
     "build",
     "dist",
     "target",
+    ".vs",
+    "bin",
+    "obj",
+    "publish"
 }
 
 # Default files to ignore
