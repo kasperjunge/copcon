@@ -1,0 +1,24 @@
+name: Python
+
+on:
+  pull_request:
+  push:
+    branches:
+      - main
+
+jobs:
+  ci:
+    runs-on: ubuntu-22.04
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v4
+        with:
+          python-version: 3.12
+      - name: Install Poetry
+        uses: abatilo/actions-poetry@v2
+        with:
+          poetry-version: 1.8.3
+      - name: Install dependencies
+        run: poetry install
+      - name: Run tests
+        run: poetry run pytest --cache-clear
