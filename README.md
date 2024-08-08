@@ -58,6 +58,25 @@ You can add more directories or files to ignore using the `--ignore-dirs` and `-
 copcon /path/to/your/directory --ignore-dirs my_ignore_dir --ignore-files my_ignore_file.txt
 ```
 
+## .copconignore File
+
+Copcon supports a `.copconignore` file, similar to `.gitignore`, which allows you to specify patterns for files and directories that should be ignored when generating the report.
+
+By default, Copcon looks for a `.copconignore` file in the root of the directory being processed. You can specify a custom location using the `--copconignore` option.
+
+Example `.copconignore` file:
+
+```
+# Ignore all log files
+*.log
+
+# Ignore the temp directory and all its contents
+temp/
+
+# Ignore all .tmp files in any directory
+**/*.tmp
+```
+
 ## Report Format
 
 Copcon generates a report in the following format:
