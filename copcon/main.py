@@ -1,10 +1,11 @@
 import typer
 from pathlib import Path
-from typing import Optional, List
+from typing import Optional, List, Set
 import subprocess
 import mimetypes
 import platform
 import sys
+import fnmatch
 
 app = typer.Typer()
 
@@ -34,45 +35,101 @@ DEFAULT_IGNORE_FILES = {
     "yarn.lock",
 }
 
+def parse_copconignore(ignore_file: Path) -> List[str]:
+    """
+    Parses the ignore patterns from a given .copconignore file.
+    
+    Args:
+        ignore_file (Path): Path to the .copconignore file.
+    
+    Returns:
+        List[str]: A list of ignore patterns.
+    """
+    if not ignore_file.exists():
+        return []
+    try:
+        with ignore_file.open() as f:
+            return [line.strip() for line in f if line.strip() and not line.startswith('#')]
+    except Exception as e:
+        typer.echo(f"Error reading ignore file: {e}", err=True)
+        return []
+
+def should_ignore(path: Path, ignore_patterns: List[str]) -> bool:
+    """
+    Determines if a given path should be ignored based on the ignore patterns.
+    
+    Args:
+        path (Path): The path to check.
+        ignore_patterns (List[str]): List of ignore patterns.
+    
+    Returns:
+        bool: True if the path should be ignored, False otherwise.
+    """
+    path_str = str(path)
+    for pattern in ignore_patterns:
+        if pattern.endswith('/'):
+            if path_str.endswith('/'):
+                if fnmatch.fnmatch(path_str, pattern):
+                    return True
+            elif fnmatch.fnmatch(path_str + '/', pattern):
+                return True
+        elif fnmatch.fnmatch(path_str, pattern):
+            return True
+    return False
 
 def generate_tree(
     directory: Path,
     prefix: str = "",
     depth: int = -1,
-    ignore_dirs: set = DEFAULT_IGNORE_DIRS,
-    ignore_files: set = DEFAULT_IGNORE_FILES,
+    ignore_dirs: Set[str] = DEFAULT_IGNORE_DIRS,
+    ignore_files: Set[str] = DEFAULT_IGNORE_FILES,
+    ignore_patterns: List[str] = [],
+    root: Optional[Path] = None,
 ) -> str:
     if depth == 0:
         return ""
+
+    if root is None:
+        root = directory
 
     output = []
     contents = list(directory.iterdir())
     contents.sort(key=lambda x: (not x.is_dir(), x.name.lower()))
 
-    for i, path in enumerate(contents):
+    visible_contents = []
+
+    for path in contents:
+        relative_path = path.relative_to(root)
         if path.is_dir() and path.name in ignore_dirs:
             continue
         if path.is_file() and path.name in ignore_files:
             continue
+        if should_ignore(relative_path, ignore_patterns):
+            continue
+        visible_contents.append(path)
 
-        is_last = i == len(contents) - 1
+    for i, path in enumerate(visible_contents):
+        is_last = i == len(visible_contents) - 1
         current_prefix = "└── " if is_last else "├── "
-        output.append(f"{prefix}{current_prefix}{path.name}")
-
+        
         if path.is_dir():
-            extension = "    " if is_last else "│   "
-            output.append(
-                generate_tree(
-                    path,
-                    prefix + extension,
-                    depth - 1 if depth > 0 else -1,
-                    ignore_dirs,
-                    ignore_files,
-                )
+            subtree_prefix = "    " if is_last else "│   "
+            subtree = generate_tree(
+                path,
+                prefix + subtree_prefix,
+                depth - 1 if depth > 0 else -1,
+                ignore_dirs,
+                ignore_files,
+                ignore_patterns,
+                root,
             )
+            if subtree:  # Only include non-empty directories
+                output.append(f"{prefix}{current_prefix}{path.name}")
+                output.append(subtree)
+        else:
+            output.append(f"{prefix}{current_prefix}{path.name}")
 
     return "\n".join(output)
-
 
 def get_file_content(file_path: Path) -> str:
     try:
@@ -126,6 +183,9 @@ def main(
     ignore_files: Optional[List[str]] = typer.Option(
         None, help="Additional files to ignore"
     ),
+    copconignore: Optional[Path] = typer.Option(
+        None, help="Path to .copconignore file"
+    ),
 ):
     """
     Generate a report of directory structure and file contents, then copy it to clipboard.
@@ -142,6 +202,14 @@ def main(
     if ignore_files:
         files_to_ignore.update(ignore_files)
 
+    ignore_patterns = []
+    if copconignore:
+        ignore_patterns = parse_copconignore(copconignore)
+    else:
+        default_copconignore = directory / ".copconignore"
+        if default_copconignore.exists():
+            ignore_patterns = parse_copconignore(default_copconignore)
+
     output = []
     output.append("Directory Structure:")
     output.append(directory.name)
@@ -151,6 +219,7 @@ def main(
             depth=depth,
             ignore_dirs=dirs_to_ignore,
             ignore_files=files_to_ignore,
+            ignore_patterns=ignore_patterns,
         )
     )
     output.append("\nFile Contents:")
@@ -165,6 +234,8 @@ def main(
             if any(ignore_dir in file_path.parts for ignore_dir in dirs_to_ignore):
                 continue
             if file_path.name in files_to_ignore:
+                continue
+            if should_ignore(file_path, ignore_patterns):
                 continue
             relative_path = file_path.relative_to(directory)
             output.append(f"\nFile: {relative_path}")
