@@ -1,6 +1,6 @@
 [tool.poetry]
 name = "copcon"
-version = "0.2.4"
+version = "0.2.5"
 description = ""
 authors = ["Kasper Junge <kasperjuunge@gmail.com>"]
 readme = "README.md"
@@ -9,6 +9,7 @@ readme = "README.md"
 python = "^3.11"
 typer = "^0.12.3"
 pywin32 = {version = "^300", platform = "win32"}
+pathspec = "^0.12.1"
 
 [tool.poetry.scripts]
 copcon = "copcon:copcon_app"
