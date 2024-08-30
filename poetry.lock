@@ -123,6 +123,16 @@ files = [
 windows-terminal = ["colorama (>=0.4.6)"]
 
 [[package]]
+name = "pyperclip"
+version = "1.9.0"
+description = "A cross-platform clipboard module for Python. (Only handles plain text for now.)"
+optional = false
+python-versions = "*"
+files = [
+    {file = "pyperclip-1.9.0.tar.gz", hash = "sha256:b7de0142ddc81bfc5c7507eea19da920b92252b548b96186caf94a5e2527d310"},
+]
+
+[[package]]
 name = "pytest"
 version = "8.3.2"
 description = "pytest: simple powerful testing with Python"
@@ -221,4 +231,4 @@ files = [
 [metadata]
 lock-version = "2.0"
 python-versions = "^3.11"
-content-hash = "ad198c268f47bb872f2437b4ffa5cfa8cf3f3a84ee39bc7ef615e7aefd520b74"
+content-hash = "199fae043d77b53867da194686b83e8202e9e5b2a22939a1cbe687b254aa9fdd"

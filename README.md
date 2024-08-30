@@ -118,7 +118,8 @@ This format provides a clear overview of your project structure followed by the 
 
 ## Note
 
-This tool is designed for macOS and Windows.
+This tool is designed for macOS and Windows. \
+**Update**: Now also available on Linux, if xclip (or similar package) is installed. Install using `$ sudo apt install xclip`
 
 ## Development
 
