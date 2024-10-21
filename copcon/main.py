@@ -131,23 +131,29 @@ def generate_tree(
     return "\n".join(output)
 
 
+# def get_file_content(file_path: Path) -> str:
+#     try:
+#         mime_type, _ = mimetypes.guess_type(str(file_path))
+
+#         # Check if the file is a text file
+#         if mime_type and (
+#             mime_type.startswith("text/")
+#             or mime_type in ["application/json", "application/xml"]
+#         ):
+#             return file_path.read_text(encoding="utf-8", errors="replace")
+#         else:
+#             # For binary files, return file information instead of content
+#             file_size = file_path.stat().st_size
+#             return f"[Binary file]\nType: {mime_type or 'Unknown'}\nSize: {file_size} bytes"
+#     except Exception as e:
+#         return f"Error reading file: {file_path}\nError: {str(e)}\n"
+
+
 def get_file_content(file_path: Path) -> str:
     try:
-        mime_type, _ = mimetypes.guess_type(str(file_path))
-
-        # Check if the file is a text file
-        if mime_type and (
-            mime_type.startswith("text/")
-            or mime_type in ["application/json", "application/xml"]
-        ):
-            return file_path.read_text(encoding="utf-8", errors="replace")
-        else:
-            # For binary files, return file information instead of content
-            file_size = file_path.stat().st_size
-            return f"[Binary file]\nType: {mime_type or 'Unknown'}\nSize: {file_size} bytes"
+        return file_path.read_text(encoding="utf-8", errors="replace")
     except Exception as e:
         return f"Error reading file: {file_path}\nError: {str(e)}\n"
-
 
 def copy_to_clipboard(text: str):
     """
