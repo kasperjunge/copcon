@@ -1,6 +1,6 @@
 [tool.poetry]
 name = "copcon"
-version = "0.2.5"
+version = "0.2.7"
 description = ""
 authors = ["Kasper Junge <kasperjuunge@gmail.com>"]
 readme = "README.md"
