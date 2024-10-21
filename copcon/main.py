@@ -1,10 +1,7 @@
 import typer
 from pathlib import Path
 from typing import Optional, List, Set
-import subprocess
 import mimetypes
-import platform
-import sys
 import pathspec
 import pyperclip
 
@@ -153,25 +150,14 @@ def get_file_content(file_path: Path) -> str:
 
 
 def copy_to_clipboard(text: str):
-    system = platform.system()
-    
-    # pyperclip should be OS-agnostic, but as I don't have neither Windows or MacOS available, I cannot test it, hence keep the original code for MacOS and Windows
-    if system == "Darwin":  # macOS
-        process = subprocess.Popen(
-            "pbcopy", env={"LANG": "en_US.UTF-8"}, stdin=subprocess.PIPE
-        )
-        process.communicate(text.encode("utf-8"))
-    elif system == "Windows":
-        import win32clipboard
-
-        win32clipboard.OpenClipboard()
-        win32clipboard.EmptyClipboard()
-        win32clipboard.SetClipboardText(text, win32clipboard.CF_UNICODETEXT)
-        win32clipboard.CloseClipboard()
-    else:
+    """
+    Copies the given text to the system clipboard using pyperclip.
+    """
+    try:
         pyperclip.copy(text)
-        # print(f"Clipboard functionality not supported on {system}")
-        # sys.exit(1)
+    except pyperclip.PyperclipException as e:
+        typer.echo(f"Error copying to clipboard: {e}", err=True)
+        raise typer.Exit(code=1)
 
 
 @app.command()
