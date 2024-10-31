@@ -31,6 +31,7 @@ DEFAULT_IGNORE_FILES = {
     "Cargo.lock",
     ".DS_Store",
     "yarn.lock",
+    "copcon_output.txt"
 }
 
 
@@ -155,15 +156,27 @@ def get_file_content(file_path: Path) -> str:
     except Exception as e:
         return f"Error reading file: {file_path}\nError: {str(e)}\n"
 
-def copy_to_clipboard(text: str):
+
+def copy_to_clipboard(text: str, output_file: Optional[Path] = None):
     """
-    Copies the given text to the system clipboard using pyperclip.
+    Copies the given text to the system clipboard using pyperclip or writes to a file.
     """
-    try:
-        pyperclip.copy(text)
-    except pyperclip.PyperclipException as e:
-        typer.echo(f"Error copying to clipboard: {e}", err=True)
-        raise typer.Exit(code=1)
+    if output_file:
+        try:
+            with open(output_file, 'w', encoding='utf-8') as f:
+                f.write(text)
+            typer.echo(f"Output written to {output_file}")
+        except Exception as e:
+            typer.echo(f"Error writing to file: {e}", err=True)
+            raise typer.Exit(code=1)
+    else:
+        try:
+            pyperclip.copy(text)
+            typer.echo("Directory structure and file contents have been copied to clipboard.")
+        except pyperclip.PyperclipException as e:
+            typer.echo(f"Error copying to clipboard: {e}", err=True)
+            typer.echo("Falling back to file output: copcon_output.txt")
+            copy_to_clipboard(text, Path("copcon_output.txt"))
 
 
 @app.command()
@@ -183,6 +196,9 @@ def main(
     ),
     copconignore: Optional[Path] = typer.Option(
         None, help="Path to .copconignore file"
+    ),
+    output_file: Optional[Path] = typer.Option(
+        None, help="Output file path (if not using clipboard)"
     ),
 ):
     """
@@ -242,7 +258,7 @@ def main(
             output.append("-" * 40)
 
     full_output = "\n".join(output)
-    copy_to_clipboard(full_output)
+    copy_to_clipboard(full_output, output_file)
 
     typer.echo("Directory structure and file contents have been copied to clipboard.")
 
