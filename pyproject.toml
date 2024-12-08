@@ -8,7 +8,7 @@ readme = "README.md"
 [tool.poetry.dependencies]
 python = "^3.11"
 typer = "^0.12.3"
-pywin32 = {version = "^300", platform = "win32"}
+pywin32 = {version = "^308", platform = "win32"}
 pathspec = "^0.12.1"
 pyperclip = "^1.8.2"  
 
