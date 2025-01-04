@@ -1,8 +1,20 @@
 # Copcon
+----
+<div style="display: flex; gap: 10px;">
+  <a href="https://github.com/kasperjunge/copcon/actions">
+    <img src="https://github.com/kasperjunge/copcon/actions/workflows/python-ci.yml/badge.svg" alt="Build Status">
+  </a>
+  <a href="LICENSE">
+    <img src="https://img.shields.io/badge/License-MIT-yellow.svg" alt="License: MIT">
+  </a>
+  <a href="https://pypi.org/project/copcon/">
+    <img src="https://img.shields.io/pypi/v/copcon.svg" alt="PyPI Version">
+  </a>
+</div>
 
-[![Build Status](https://github.com/kasperjunge/copcon/actions/workflows/python-ci.yml/badge.svg)](https://github.com/kasperjunge/copcon/actions)
-[![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](LICENSE)
-[![PyPI Version](https://img.shields.io/pypi/v/copcon.svg)](https://pypi.org/project/copcon/)
+Copcon is a CLI tool that effortlessly copies your project's directory structure and file contents directly to the clipboard.
+
+
 
 ## Table of Contents
 - [Overview](#overview)
