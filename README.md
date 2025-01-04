@@ -1,70 +1,110 @@
-# Copcon 🐎
+# Copcon
 
-Copcon (Copy Context) is a CLI tool designed to rapidly capture and summarize code context for use in large language model (LLM) based chatbots like Claude and ChatGPT.
+[![Build Status](https://github.com/kasperjunge/copcon/actions/workflows/python-ci.yml/badge.svg)](https://github.com/kasperjunge/copcon/actions)
+[![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](LICENSE)
+[![PyPI Version](https://img.shields.io/pypi/v/copcon.svg)](https://pypi.org/project/copcon/)
 
-Just point the copcon command at a directory, and all the LLM needs to know about your code is copied to your clipboard, ready to fire into ChatGPT with CTRL+V 🐎
+## Table of Contents
+- [Overview](#overview)
+- [Features](#features)
+- [Installation](#installation)
+- [Usage](#usage)
+- [.copconignore Configuration](#copconignore-configuration)
+- [Report Format](#report-format)
+- [Platform Support](#platform-support)
+- [Development](#development)
+- [Contributing](#contributing)
+- [License](#license)
+- [Changelog](#changelog)
 
-## Why Copcon?
+## Overview
 
-- 🚀 **Speed Up Your Workflow**: No more manual explanations of your project structure.
-- 🎯 **Get More Accurate AI Responses**: Provide complete context in seconds.
-- 🧠 **Enhance AI Understanding**: Help AI understand your specific codebase instantly.
+Copcon (Copy Context) is a CLI tool designed to generate a comprehensive report of a project's directory structure and file contents. This report can be used to provide context to large language models (LLMs) like ChatGPT, facilitating more informed and accurate responses based on your codebase.
 
 ## Features
 
-- Generate a directory tree structure
-- Capture file contents
-- Customizable depth for directory traversal
-- Ability to exclude hidden files and directories
-- Option to ignore specific directories and files
-- Copies the generated report to the clipboard
+- **Directory Tree Generation**: Creates a visual representation of your project's directory structure.
+- **File Content Capture**: Includes the contents of files, with options to handle binary files appropriately.
+- **Customizable Traversal Depth**: Specify how deep the directory traversal should go.
+- **Exclusion Options**: Exclude hidden files/directories and specify additional patterns to ignore.
+- **Clipboard Integration**: Optionally copy the generated report directly to the clipboard.
+- **File Output**: Save the report to a specified file instead of copying to the clipboard.
 
-## Quick Start
+## Installation
 
-1. Install: `pip install copcon`
-2. Run: `copcon /path/to/your/project`
-3. Paste the result into your AI chat
+### Prerequisites
+
+- Python 3.11+
+- [Poetry](https://python-poetry.org/docs/#installation) for dependency management (if installing from source)
+
+### Using Pip
+
+Install Copcon via pip:
+
+```bash
+pip install copcon
+```
+
+### From Source
+
+Clone the repository and install dependencies using Poetry:
+
+```bash
+git clone https://github.com/kasperjunge/copcon.git
+cd copcon
+poetry install
+```
 
 ## Usage
 
-After installation, you can use the `copcon` command:
+After installation, use the `copcon` command to generate a report of your project.
 
-```
-copcon /path/to/your/directory
-```
+### Basic Command
 
-Options:
+Generate a report and copy it to the clipboard:
 
-- `--depth INTEGER`: Depth of directory tree to display (-1 for unlimited)
-- `--exclude-hidden / --no-exclude-hidden`: Exclude hidden files and directories (default: True)
-- `--ignore-dirs TEXT`: Additional directories to ignore (can be used multiple times)
-- `--ignore-files TEXT`: Additional files to ignore (can be used multiple times)
-
-For help, use:
-
-```
-copcon --help
+```bash
+copcon /path/to/your/project
 ```
 
-By default, Copcon ignores the following directories:
-`__pycache__`, `.venv`, `node_modules`, `.git`, `.idea`, `.vscode`, `build`, `dist`, `target`
+### Options
 
-And the following files:
-`poetry.lock`, `package-lock.json`, `Cargo.lock`, `.DS_Store`, `yarn.lock`
+- `--depth INTEGER`: Specify the depth of directory traversal (`-1` for unlimited). Default is `-1`.
+- `--exclude-hidden / --no-exclude-hidden`: Toggle exclusion of hidden files and directories. Default is `--exclude-hidden`.
+- `--ignore-dirs TEXT`: Additional directories to ignore. Can be used multiple times.
+- `--ignore-files TEXT`: Additional files to ignore. Can be used multiple times.
+- `--copconignore PATH`: Path to a custom `.copconignore` file.
+- `--output-file PATH`: Specify an output file path to save the report instead of copying to the clipboard.
 
-You can add more directories or files to ignore using the `--ignore-dirs` and `--ignore-files` options:
+### Example Commands
 
+#### Generate a Report with Default Settings
+
+```bash
+copcon /path/to/your/project
 ```
-copcon /path/to/your/directory --ignore-dirs my_ignore_dir --ignore-files my_ignore_file.txt
+
+#### Generate a Report with Custom Depth and Exclusions
+
+```bash
+copcon /path/to/your/project --depth 2 --ignore-dirs tests --ignore-files *.md
 ```
 
-## .copconignore File
+#### Output the Report to a File
 
-Copcon supports a `.copconignore` file, similar to `.gitignore`, which allows you to specify patterns for files and directories that should be ignored when generating the report.
+```bash
+copcon /path/to/your/project --output-file report.txt
+```
 
-By default, Copcon looks for a `.copconignore` file in the root of the directory being processed. You can specify a custom location using the `--copconignore` option.
+## .copconignore Configuration
 
-Example `.copconignore` file:
+Copcon supports a `.copconignore` file to specify patterns for files and directories to exclude from the report. This file should be placed in the root of your project directory.
+
+### Syntax
+
+The `.copconignore` follows the [gitignore](https://git-scm.com/docs/gitignore) syntax, allowing for flexible pattern matching.
+
+### Example `.copconignore`:
 
 ```
 # Ignore all log files
@@ -79,7 +119,12 @@ temp/
 
 ## Report Format
 
-Copcon generates a report in the following format:
+Copcon generates a report structured into two main sections:
+
+1. **Directory Structure**: A tree-like representation of your project's directories and files.
+2. **File Contents**: The contents of each file, with binary files indicated appropriately.
+
+### Example Report:
 
 ```
 Directory Structure:
@@ -114,25 +159,71 @@ File: main.py
 ----------------------------------------
 ```
 
-This format provides a clear overview of your project structure followed by the contents of each file, making it easy for AI models to understand your codebase.
+## Platform Support
 
-## Note
+Copcon is compatible with the following operating systems:
 
-This tool is designed for macOS and Windows. \
-**Update**: Now also available on Linux, if xclip (or similar package) is installed. Install using `$ sudo apt install xclip`
+- **macOS**
+- **Windows**
+- **Linux** (requires `xclip` or a similar package)
+
+### Linux Clipboard Support
+
+To enable clipboard functionality on Linux, install `xclip`:
+
+```bash
+sudo apt install xclip
+```
 
 ## Development
 
-To set up the development environment:
+### Setting Up the Development Environment
 
-1. Ensure you have Python 3.11+ and Poetry installed
-2. Clone the repository
-3. Run `poetry install` to install dependencies
+1. Ensure you have Python 3.11+ and Poetry installed.
+2. Clone the repository:
+
+    ```bash
+    git clone https://github.com/kasperjunge/copcon.git
+    cd copcon
+    ```
+
+3. Install dependencies:
+
+    ```bash
+    poetry install
+    ```
+
+4. Run tests:
+
+    ```bash
+    poetry run pytest
+    ```
+
 
 ## Contributing
 
-Contributions are welcome! Please feel free to submit a Pull Request.
+Contributions are welcome. Please follow these steps to contribute:
+
+1. Fork the repository.
+2. Create a new branch for your feature or bugfix:
+
+    ```bash
+    git checkout -b feature/your-feature-name
+    ```
+
+3. Commit your changes with clear messages.
+4. Push to your fork and submit a Pull Request.
+
+### Guidelines
+
+- Adhere to PEP 8 coding standards.
+- Include tests for new features or bug fixes.
+- Update documentation as necessary.
 
 ## License
 
-This project is licensed under the MIT License.
+This project is licensed under the [MIT License](LICENSE).
+
+## Changelog
+
+All notable changes to this project are documented in the [CHANGELOG](CHANGELOG.md).
