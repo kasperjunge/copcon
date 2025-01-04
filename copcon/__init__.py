@@ -1,1 +1,1 @@
-from .main import app as copcon_app
+from .cli import app as copcon_app
