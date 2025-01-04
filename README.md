@@ -1,5 +1,5 @@
 # Copcon
-----
+
 <div style="display: flex; gap: 10px;">
   <a href="https://github.com/kasperjunge/copcon/actions">
     <img src="https://github.com/kasperjunge/copcon/actions/workflows/python-ci.yml/badge.svg" alt="Build Status">
