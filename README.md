@@ -32,9 +32,6 @@ Copcon (Copy Context) is a CLI tool designed to generate a comprehensive report 
 
 ## Installation
 
-
-Install Copcon:
-
 ```bash
 pip install copcon
 
