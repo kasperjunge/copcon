@@ -1,0 +1,7 @@
+Copcon Modules
+==============
+
+.. automodule:: copcon
+    :members:
+    :undoc-members:
+    :show-inheritance:

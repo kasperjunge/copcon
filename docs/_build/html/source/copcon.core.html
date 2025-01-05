@@ -1,0 +1,285 @@
+
+
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" data-content_root="../">
+<head>
+  <meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>copcon.core package &mdash; Copcon 0.3.2 documentation</title>
+      <link rel="stylesheet" type="text/css" href="../_static/pygments.css?v=80d5e7a1" />
+      <link rel="stylesheet" type="text/css" href="../_static/css/theme.css?v=e59714d7" />
+
+  
+      <script src="../_static/jquery.js?v=5d32c60e"></script>
+      <script src="../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+      <script src="../_static/documentation_options.js?v=71d9d8e6"></script>
+      <script src="../_static/doctools.js?v=9bcbadda"></script>
+      <script src="../_static/sphinx_highlight.js?v=dc90522c"></script>
+    <script src="../_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="../index.html" class="icon icon-home">
+            Copcon
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <p class="caption" role="heading"><span class="caption-text">Contents:</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../modules.html">Copcon Modules</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../index.html">Copcon</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="../index.html" class="icon icon-home" aria-label="Home"></a></li>
+      <li class="breadcrumb-item active">copcon.core package</li>
+      <li class="wy-breadcrumbs-aside">
+            <a href="../_sources/source/copcon.core.rst.txt" rel="nofollow"> View page source</a>
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <section id="copcon-core-package">
+<h1>copcon.core package<a class="headerlink" href="#copcon-core-package" title="Link to this heading"></a></h1>
+<section id="submodules">
+<h2>Submodules<a class="headerlink" href="#submodules" title="Link to this heading"></a></h2>
+</section>
+<section id="module-copcon.core.clipboard">
+<span id="copcon-core-clipboard-module"></span><h2>copcon.core.clipboard module<a class="headerlink" href="#module-copcon.core.clipboard" title="Link to this heading"></a></h2>
+<p>Clipboard Management for Copcon.</p>
+<p>This module provides functionality to interact with the system clipboard, allowing Copcon
+to copy generated reports directly to the clipboard.</p>
+<dl class="py class">
+<dt class="sig sig-object py" id="copcon.core.clipboard.ClipboardManager">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">copcon.core.clipboard.</span></span><span class="sig-name descname"><span class="pre">ClipboardManager</span></span><a class="headerlink" href="#copcon.core.clipboard.ClipboardManager" title="Link to this definition"></a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
+<p>Manages clipboard operations for Copcon.</p>
+<p>Provides methods to copy text to the system clipboard.</p>
+<dl class="py method">
+<dt class="sig sig-object py" id="copcon.core.clipboard.ClipboardManager.copy">
+<span class="sig-name descname"><span class="pre">copy</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">text</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#copcon.core.clipboard.ClipboardManager.copy" title="Link to this definition"></a></dt>
+<dd><p>Copy text to the system clipboard.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>text</strong> (<em>str</em>) – The text to copy to the clipboard.</p>
+</dd>
+<dt class="field-even">Raises<span class="colon">:</span></dt>
+<dd class="field-even"><p><a class="reference internal" href="copcon.html#copcon.exceptions.ClipboardError" title="copcon.exceptions.ClipboardError"><strong>ClipboardError</strong></a> – If the clipboard operation fails.</p>
+</dd>
+</dl>
+</dd></dl>
+
+</dd></dl>
+
+</section>
+<section id="module-copcon.core.file_filter">
+<span id="copcon-core-file-filter-module"></span><h2>copcon.core.file_filter module<a class="headerlink" href="#module-copcon.core.file_filter" title="Link to this heading"></a></h2>
+<p>File Filtering for Copcon.</p>
+<p>This module provides functionality to filter files and directories based on ignore patterns
+specified in <cite>.copconignore</cite> files and additional user-defined patterns.</p>
+<dl class="py class">
+<dt class="sig sig-object py" id="copcon.core.file_filter.FileFilter">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">copcon.core.file_filter.</span></span><span class="sig-name descname"><span class="pre">FileFilter</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">additional_dirs</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">additional_files</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">user_ignore_path</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#copcon.core.file_filter.FileFilter" title="Link to this definition"></a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
+<p>Filters files and directories based on ignore patterns.</p>
+<p>Combines internal and user-specified ignore patterns to determine whether a file or
+directory should be excluded from processing.</p>
+<dl class="py method">
+<dt class="sig sig-object py" id="copcon.core.file_filter.FileFilter.should_ignore">
+<span class="sig-name descname"><span class="pre">should_ignore</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">path</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#copcon.core.file_filter.FileFilter.should_ignore" title="Link to this definition"></a></dt>
+<dd><p>Determine whether a given file or directory should be ignored.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>path</strong> (<em>Path</em>) – The file or directory path to check.</p>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>True if the path should be ignored, False otherwise.</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>bool</p>
+</dd>
+</dl>
+</dd></dl>
+
+</dd></dl>
+
+</section>
+<section id="module-copcon.core.file_reader">
+<span id="copcon-core-file-reader-module"></span><h2>copcon.core.file_reader module<a class="headerlink" href="#module-copcon.core.file_reader" title="Link to this heading"></a></h2>
+<p>File Reading for Copcon.</p>
+<p>This module provides functionality to read the contents of files in the project directory,
+handling both text and binary files appropriately.</p>
+<dl class="py class">
+<dt class="sig sig-object py" id="copcon.core.file_reader.FileContentReader">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">copcon.core.file_reader.</span></span><span class="sig-name descname"><span class="pre">FileContentReader</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">base_directory</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">file_filter</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">exclude_hidden</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#copcon.core.file_reader.FileContentReader" title="Link to this definition"></a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
+<p>Reads and manages the contents of files in the project directory.</p>
+<p>Handles reading text files and providing placeholders for binary files. Keeps track of
+the total number of characters processed.</p>
+<dl class="py method">
+<dt class="sig sig-object py" id="copcon.core.file_reader.FileContentReader.read_all">
+<span class="sig-name descname"><span class="pre">read_all</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#copcon.core.file_reader.FileContentReader.read_all" title="Link to this definition"></a></dt>
+<dd><p>Read all applicable files in the base directory.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns<span class="colon">:</span></dt>
+<dd class="field-odd"><p>A dictionary mapping relative file paths to their contents.</p>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p>Dict[str, str]</p>
+</dd>
+<dt class="field-odd">Raises<span class="colon">:</span></dt>
+<dd class="field-odd"><p><a class="reference internal" href="copcon.html#copcon.exceptions.FileReadError" title="copcon.exceptions.FileReadError"><strong>FileReadError</strong></a> – If any file read operations fail.</p>
+</dd>
+</dl>
+</dd></dl>
+
+</dd></dl>
+
+</section>
+<section id="module-copcon.core.file_tree">
+<span id="copcon-core-file-tree-module"></span><h2>copcon.core.file_tree module<a class="headerlink" href="#module-copcon.core.file_tree" title="Link to this heading"></a></h2>
+<p>Directory Tree Generation for Copcon.</p>
+<p>This module provides functionality to generate a visual representation of the project’s
+directory structure.</p>
+<dl class="py class">
+<dt class="sig sig-object py" id="copcon.core.file_tree.FileTreeGenerator">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">copcon.core.file_tree.</span></span><span class="sig-name descname"><span class="pre">FileTreeGenerator</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">directory</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">depth</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">file_filter</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#copcon.core.file_tree.FileTreeGenerator" title="Link to this definition"></a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
+<p>Generates a tree-like directory structure for a given directory.</p>
+<p>Traverses the directory up to a specified depth and applies file filters to exclude
+certain files and directories.</p>
+<dl class="py method">
+<dt class="sig sig-object py" id="copcon.core.file_tree.FileTreeGenerator.generate">
+<span class="sig-name descname"><span class="pre">generate</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">current_dir</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">current_depth</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">prefix</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">''</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#copcon.core.file_tree.FileTreeGenerator.generate" title="Link to this definition"></a></dt>
+<dd><p>Generate the directory tree as a string.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>current_dir</strong> (<em>Path</em><em>, </em><em>optional</em>) – The current directory being traversed.</p></li>
+<li><p><strong>current_depth</strong> (<em>int</em>) – The current depth in the directory tree.</p></li>
+<li><p><strong>prefix</strong> (<em>str</em>) – The prefix string for the current level of the tree.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>The generated directory tree as a string.</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>str</p>
+</dd>
+</dl>
+</dd></dl>
+
+</dd></dl>
+
+</section>
+<section id="module-copcon.core.report">
+<span id="copcon-core-report-module"></span><h2>copcon.core.report module<a class="headerlink" href="#module-copcon.core.report" title="Link to this heading"></a></h2>
+<p>Report Formatting for Copcon.</p>
+<p>This module provides functionality to format the directory structure and file contents
+into a comprehensive report.</p>
+<dl class="py class">
+<dt class="sig sig-object py" id="copcon.core.report.ReportFormatter">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">copcon.core.report.</span></span><span class="sig-name descname"><span class="pre">ReportFormatter</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">project_name</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">directory_tree</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">file_contents</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#copcon.core.report.ReportFormatter" title="Link to this definition"></a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
+<p>Formats the directory structure and file contents into a structured report.</p>
+<dl class="py method">
+<dt class="sig sig-object py" id="copcon.core.report.ReportFormatter.format">
+<span class="sig-name descname"><span class="pre">format</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#copcon.core.report.ReportFormatter.format" title="Link to this definition"></a></dt>
+<dd><p>Format the report as a string.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns<span class="colon">:</span></dt>
+<dd class="field-odd"><p>The formatted report.</p>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p>str</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="copcon.core.report.ReportFormatter.write_to_file">
+<span class="sig-name descname"><span class="pre">write_to_file</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">report</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">output_file</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#copcon.core.report.ReportFormatter.write_to_file" title="Link to this definition"></a></dt>
+<dd><p>Write the formatted report to a file.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>report</strong> (<em>str</em>) – The formatted report to write.</p></li>
+<li><p><strong>output_file</strong> (<em>Path</em>) – The path to the output file.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Raises<span class="colon">:</span></dt>
+<dd class="field-even"><p><strong>Exception</strong> – If there is an error writing to the file.</p>
+</dd>
+</dl>
+</dd></dl>
+
+</dd></dl>
+
+</section>
+<section id="module-copcon.core">
+<span id="module-contents"></span><h2>Module contents<a class="headerlink" href="#module-copcon.core" title="Link to this heading"></a></h2>
+<p>Core Module for Copcon.</p>
+<p>This module contains the core functionalities of the Copcon application, including file filtering,
+directory tree generation, file reading, report formatting, and clipboard management.</p>
+</section>
+</section>
+
+
+           </div>
+          </div>
+          <footer>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright .</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

@@ -1,0 +1,38 @@
+copcon package
+==============
+
+Subpackages
+-----------
+
+.. toctree::
+   :maxdepth: 4
+
+   copcon.core
+   copcon.utils
+
+Submodules
+----------
+
+copcon.cli module
+-----------------
+
+.. automodule:: copcon.cli
+   :members:
+   :undoc-members:
+   :show-inheritance:
+
+copcon.exceptions module
+------------------------
+
+.. automodule:: copcon.exceptions
+   :members:
+   :undoc-members:
+   :show-inheritance:
+
+Module contents
+---------------
+
+.. automodule:: copcon
+   :members:
+   :undoc-members:
+   :show-inheritance:

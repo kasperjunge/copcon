@@ -1,0 +1,21 @@
+copcon.utils package
+====================
+
+Submodules
+----------
+
+copcon.utils.logger module
+--------------------------
+
+.. automodule:: copcon.utils.logger
+   :members:
+   :undoc-members:
+   :show-inheritance:
+
+Module contents
+---------------
+
+.. automodule:: copcon.utils
+   :members:
+   :undoc-members:
+   :show-inheritance:
