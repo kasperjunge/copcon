@@ -7,12 +7,14 @@ on:
     paths-ignore:
       - 'README.md'
       - '.gitignore'
+      - 'docs/**'
   pull_request:
     branches:
       - main
     paths-ignore:
       - 'README.md'
       - '.gitignore'
+      - 'docs/**'
 
 jobs:
   test:
