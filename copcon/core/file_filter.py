@@ -1,3 +1,9 @@
+"""File Filtering for Copcon.
+
+This module provides functionality to filter files and directories based on ignore patterns
+specified in `.copconignore` files and additional user-defined patterns.
+"""
+
 from pathlib import Path
 from typing import List, Set, Optional
 import pathspec
@@ -6,12 +12,30 @@ from copcon.utils.logger import logger
 import importlib.resources as pkg_resources
 
 class FileFilter:
+    """Filters files and directories based on ignore patterns.
+
+    Combines internal and user-specified ignore patterns to determine whether a file or
+    directory should be excluded from processing.
+    """
+
     def __init__(
         self,
         additional_dirs: Optional[List[str]] = None,
         additional_files: Optional[List[str]] = None,
         user_ignore_path: Optional[Path] = None,
     ):
+        """
+        Initialize the FileFilter.
+
+        Args:
+            additional_dirs (List[str], optional): Additional directory names to ignore.
+            additional_files (List[str], optional): Additional file names to ignore.
+            user_ignore_path (Path, optional): Path to a user-specified `.copconignore` file.
+
+        Raises:
+            FileReadError: If there is an error reading ignore files.
+        """
+
         # Load default ignore patterns from internal .copconignore
         self.ignore_spec = self._load_internal_copconignore()
 
@@ -39,6 +63,15 @@ class FileFilter:
             self.ignore_files = set()
 
     def _load_internal_copconignore(self) -> pathspec.PathSpec:
+        """Load internal ignore patterns from the package's .copconignore file.
+
+        Returns:
+            pathspec.PathSpec: The compiled path specification.
+
+        Raises:
+            FileReadError: If there is an error loading the internal ignore file.
+        """
+
         try:
             with pkg_resources.open_text('copcon.core', '.copconignore') as f:
                 patterns = [line.strip() for line in f if line.strip() and not line.startswith("#")]
@@ -50,6 +83,15 @@ class FileFilter:
             raise FileReadError(f"Error loading internal .copconignore: {e}")
 
     def should_ignore(self, path: Path) -> bool:
+        """Determine whether a given file or directory should be ignored.
+
+        Args:
+            path (Path): The file or directory path to check.
+
+        Returns:
+            bool: True if the path should be ignored, False otherwise.
+        """
+
         path_str = str(path)
         if path.is_dir():
             path_str += "/"

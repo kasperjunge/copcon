@@ -1,4 +1,8 @@
-# copcon/cli.py
+"""Command-Line Interface for Copcon.
+
+This module defines the CLI commands and options using Typer for the Copcon application.
+"""
+
 import typer
 from pathlib import Path
 from copcon.core.file_tree import FileTreeGenerator
@@ -21,8 +25,16 @@ def main(
     copconignore: Path = typer.Option(None, help="Path to .copconignore file"),
     output_file: Path = typer.Option(None, help="Output file path (if not using clipboard)"),
 ):
-    """
-    Generate a report of directory structure and file contents, then copy it to clipboard.
+    """Generate a report of directory structure and file contents, then copy it to clipboard.
+
+    Args:
+        directory (Path): The directory to process.
+        depth (int): Depth of directory tree to display (-1 for unlimited).
+        exclude_hidden (bool): Exclude hidden files and directories.
+        ignore_dirs (List[str], optional): Additional directories to ignore.
+        ignore_files (List[str], optional): Additional files to ignore.
+        copconignore (Path, optional): Path to a custom .copconignore file.
+        output_file (Path, optional): Output file path to save the report instead of copying to clipboard.
     """
     try:
 

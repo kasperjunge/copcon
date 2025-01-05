@@ -24,7 +24,7 @@ wheels = [
 
 [[package]]
 name = "copcon"
-version = "0.3.0"
+version = "0.3.3"
 source = { editable = "." }
 dependencies = [
     { name = "pathspec" },
