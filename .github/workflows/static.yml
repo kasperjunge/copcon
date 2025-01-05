@@ -1,43 +1,61 @@
-# Simple workflow for deploying static content to GitHub Pages
-name: Deploy static content to Pages
+# .github/workflows/static.yml
+
+name: Build and Deploy Documentation
 
 on:
-  # Runs on pushes targeting the default branch
   push:
-    branches: ["main"]
-
-  # Allows you to run this workflow manually from the Actions tab
-  workflow_dispatch:
-
-# Sets permissions of the GITHUB_TOKEN to allow deployment to GitHub Pages
-permissions:
-  contents: read
-  pages: write
-  id-token: write
-
-# Allow only one concurrent deployment, skipping runs queued between the run in-progress and latest queued.
-# However, do NOT cancel in-progress runs as we want to allow these production deployments to complete.
-concurrency:
-  group: "pages"
-  cancel-in-progress: false
+    branches:
+      - main  # Triggers on pushes to the main branch
+  pull_request:
+    branches:
+      - main  # Triggers on pull requests targeting the main branch
 
 jobs:
-  # Single deploy job since we're just deploying
-  deploy:
-    environment:
-      name: github-pages
-      url: ${{ steps.deployment.outputs.page_url }}
+  build-and-deploy:
     runs-on: ubuntu-latest
+
     steps:
-      - name: Checkout
-        uses: actions/checkout@v4
-      - name: Setup Pages
-        uses: actions/configure-pages@v5
-      - name: Upload artifact
-        uses: actions/upload-pages-artifact@v3
+      # 1. Checkout the repository
+      - name: Checkout Repository
+        uses: actions/checkout@v3
         with:
-          # Upload entire repository
-          path: 'docs/_build/html/'
+          fetch-depth: 0  # Fetch all history for all branches and tags
+
+      # 2. Set up Python
+      - name: Set up Python
+        uses: actions/setup-python@v4
+        with:
+          python-version: '3.11'  # Specify your Python version
+
+      # 3. Install `uv` and synchronize dependencies
+      - name: Install `uv` and Dependencies
+        run: |
+          python -m pip install --upgrade pip
+          pip install uv
+          uv sync  # Synchronize dependencies as defined in pyproject.toml
+
+      # 4. Build the documentation
+      - name: Build Documentation
+        run: |
+          cd docs  # Navigate to your docs directory
+          uv run make html  # Use `uv run` to execute the build command
+
+      # 5. Deploy to GitHub Pages
       - name: Deploy to GitHub Pages
-        id: deployment
-        uses: actions/deploy-pages@v4
+        uses: peaceiris/actions-gh-pages@v3
+        with:
+          github_token: ${{ secrets.GITHUB_TOKEN }}
+          publish_dir: ./docs/_build/html  # Path to the built documentation
+          publish_branch: gh-pages
+          keep_history: false  # Overwrite the `gh-pages` branch on each deployment
+          allow_empty_commit: true  # Allow the action to succeed even if there are no changes
+
+      # 6. Remove Built Docs from Repository
+      - name: Remove Built Docs from Repository
+        if: always()  # Ensure this step runs even if previous steps fail
+        run: |
+          git rm -r --cached docs/_build  # Remove the built docs from git tracking
+          echo "docs/_build/" >> .gitignore  # Add the built docs directory to .gitignore
+          git add .gitignore
+          git commit -m "Remove built documentation from repository" || echo "No changes to commit"
+          git push origin main
