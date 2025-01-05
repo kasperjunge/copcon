@@ -5,11 +5,12 @@ specified in `.copconignore` files and additional user-defined patterns.
 """
 
 from pathlib import Path
-from typing import List, Set, Optional
+from typing import List, Set, Optional, Tuple
 import pathspec
 from copcon.exceptions import FileReadError
 from copcon.utils.logger import logger
 import importlib.resources as pkg_resources
+
 
 class FileFilter:
     """Filters files and directories based on ignore patterns.
@@ -35,17 +36,18 @@ class FileFilter:
         Raises:
             FileReadError: If there is an error reading ignore files.
         """
-
-        # Load default ignore patterns from internal .copconignore
+        # Load internal patterns
         self.ignore_spec = self._load_internal_copconignore()
+        self.user_defined = False  # Flag to indicate if user-defined .copconignore was loaded
 
-        # Load additional ignore patterns from user-specified .copconignore
+        # Load user-specified patterns if any
         if user_ignore_path and user_ignore_path.exists():
             try:
                 with user_ignore_path.open() as f:
                     user_patterns = [line.strip() for line in f if line.strip() and not line.startswith("#")]
                 user_spec = pathspec.PathSpec.from_lines("gitwildmatch", user_patterns)
-                self.ignore_spec = self.ignore_spec + user_spec  # Combine specs
+                self.ignore_spec = self.ignore_spec + user_spec  # Merge user patterns
+                self.user_defined = True  # Set flag as user-defined .copconignore is loaded
                 logger.debug(f"Loaded user ignore patterns from {user_ignore_path}")
             except Exception as e:
                 logger.error(f"Error reading user ignore file {user_ignore_path}: {e}")
@@ -92,7 +94,7 @@ class FileFilter:
             bool: True if the path should be ignored, False otherwise.
         """
 
-        path_str = str(path)
+        path_str = str(path.relative_to(path.anchor))
         if path.is_dir():
             path_str += "/"
         # Check against internal and user-specified ignore patterns
@@ -104,3 +106,11 @@ class FileFilter:
         if path.is_file() and path.name in self.ignore_files:
             return True
         return False
+
+    def has_user_defined_ignore(self) -> bool:
+        """Check if a user-defined .copconignore was loaded.
+
+        Returns:
+            bool: True if a user-defined .copconignore was loaded, False otherwise.
+        """
+        return self.user_defined

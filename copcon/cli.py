@@ -15,6 +15,7 @@ from copcon.utils.logger import logger
 
 app = typer.Typer()
 
+
 @app.command()
 def main(
     directory: Path = typer.Argument(..., help="The directory to process"),
@@ -37,15 +38,29 @@ def main(
         output_file (Path, optional): Output file path to save the report instead of copying to clipboard.
     """
     try:
-
         if not directory.exists() or not directory.is_dir():
             raise FileReadError(f"{directory} is not a valid directory.")
-                
-        # Initialize FileFilter with user-specified .copconignore
+
+        # Determine the .copconignore path
+        user_copconignore = None
+        if copconignore:
+            if copconignore.exists() and copconignore.is_file():
+                user_copconignore = copconignore
+                logger.debug(f"Using user-specified .copconignore at {user_copconignore}")
+            else:
+                logger.warning(f"Specified .copconignore file {copconignore} does not exist or is not a file.")
+        else:
+            # Look for .copconignore in the current working directory
+            potential_ignore = Path.cwd() / ".copconignore"
+            if potential_ignore.exists() and potential_ignore.is_file():
+                user_copconignore = potential_ignore
+                logger.debug(f"Found user-defined .copconignore at {user_copconignore}")
+
+        # Initialize FileFilter with the determined .copconignore path
         file_filter = FileFilter(
             additional_dirs=ignore_dirs,
             additional_files=ignore_files,
-            user_ignore_path=copconignore
+            user_ignore_path=user_copconignore
         )
 
         # Generate directory tree
@@ -71,6 +86,13 @@ def main(
         formatted_file_count = f"{file_count:,}"
         formatted_total_chars = f"{total_chars:,}"
 
+        # Prepare success message components
+        copconignore_info = ""
+        if file_filter.has_user_defined_ignore():
+            copconignore_info = "A user-defined `.copconignore` file was found and applied.\n"
+        else:
+            copconignore_info = "Consider creating a `.copconignore` file in your project root to customize exclusions.\n"
+
         # Output
         if output_file:
             formatter.write_to_file(report, output_file)
@@ -79,8 +101,9 @@ def main(
                 f"📁 {formatted_directory_count} directories\n"
                 f"📄 {formatted_file_count} files\n"
                 f"📝 {formatted_total_chars} characters\n\n"
-                f"The report has been written to `{output_file}`. You can now open or share it as needed. 🚀"
-                "If you find Copcon useful, please consider leaving a star on GitHub: github.com/kasperjunge/copcon ⭐"
+                # f"{copconignore_info}"
+                f"The report has been written to `{output_file}`. You can now open or share it as needed. 🚀\n"
+                "If you find Copcon useful, please consider leaving a star on: github.com/kasperjunge/copcon ⭐"
             )
         else:
             clipboard = ClipboardManager()
@@ -90,8 +113,9 @@ def main(
                 f"📁 {formatted_directory_count} directories\n"
                 f"📄 {formatted_file_count} files\n"
                 f"📝 {formatted_total_chars} characters\n\n"
+                # f"{copconignore_info}"
                 f"The report has been copied to your clipboard. You can now paste it into your preferred AI assistant 🚀\n\n"
-                "If you find Copcon useful, please consider leaving a star on GitHub: github.com/kasperjunge/copcon ⭐"
+                "If you find Copcon useful, please consider leaving a star on: github.com/kasperjunge/copcon ⭐"
             )
 
     except FileReadError as fre:
@@ -103,6 +127,7 @@ def main(
     except Exception as e:
         logger.exception("An unexpected error occurred.")
         raise typer.Exit(code=1)
+
 
 if __name__ == "__main__":
     app()
