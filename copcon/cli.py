@@ -13,7 +13,6 @@ from copcon.core.clipboard import ClipboardManager
 from copcon.exceptions import ClipboardError, FileReadError
 from copcon.utils.logger import logger
 
-
 app = typer.Typer()
 
 @app.command()

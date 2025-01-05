@@ -1,6 +1,6 @@
 [project]
 name = "copcon"
-version = "0.3.4"
+version = "0.3.5"
 description = ""
 readme = "README.md"
 requires-python = ">=3.11,<4.0"
@@ -12,10 +12,6 @@ dependencies = [
     "pathspec>=0.12.1,<1.0.0",
     "pyperclip>=1.8.2,<2.0.0",
     'pywin32>=308,<309; platform_system == "Windows"',
-    "sphinx>=8.1.3",
-    "sphinx-autodoc-typehints>=3.0.0",
-    "sphinx-rtd-theme>=3.0.2",
-    "sphinx-autobuild>=2024.10.3",
 ]
 
 include = [
@@ -28,6 +24,12 @@ copcon = "copcon:copcon_app"
 [dependency-groups]
 dev = [
     "pytest<9.0.0,>=8.3.2",
+]
+docs = [
+    "sphinx>=8.1.3",
+    "sphinx-autobuild>=2024.10.3",
+    "sphinx-autodoc-typehints>=3.0.0",
+    "sphinx-rtd-theme>=3.0.2",
 ]
 
 [build-system]
