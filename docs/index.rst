@@ -6,6 +6,8 @@
 Welcome to Copcon's documentation!
 ==================================
 
+This is Copcon!
+
 .. toctree::
    :maxdepth: 1
    :caption: Modules:
