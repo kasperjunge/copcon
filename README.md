@@ -16,6 +16,7 @@
 Copcon is a CLI tool that effortlessly copies your project's directory structure and file contents directly to the clipboard, ideal for working with AI chatbots.
 
 
+[Read the docs here](https://kasperjunge.github.io/copcon/)
 
 ## Overview
 
