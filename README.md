@@ -1,4 +1,4 @@
-# Copcon
+# Copcon 🐎
 
 <div style="display: flex; gap: 10px;">
   <a href="https://github.com/kasperjunge/copcon/actions">
@@ -12,28 +12,16 @@
   </a>
 </div>
 
+
 Copcon is a CLI tool that effortlessly copies your project's directory structure and file contents directly to the clipboard.
 
 
-
-## Table of Contents
-- [Overview](#overview)
-- [Features](#features)
-- [Installation](#installation)
-- [Usage](#usage)
-- [.copconignore Configuration](#copconignore-configuration)
-- [Report Format](#report-format)
-- [Platform Support](#platform-support)
-- [Development](#development)
-- [Contributing](#contributing)
-- [License](#license)
-- [Changelog](#changelog)
 
 ## Overview
 
 Copcon (Copy Context) is a CLI tool designed to generate a comprehensive report of a project's directory structure and file contents. This report can be used to provide context to large language models (LLMs) like ChatGPT, facilitating more informed and accurate responses based on your codebase.
 
-## Features
+#### Features
 
 - **Directory Tree Generation**: Creates a visual representation of your project's directory structure.
 - **File Content Capture**: Includes the contents of files, with options to handle binary files appropriately.
@@ -44,27 +32,12 @@ Copcon (Copy Context) is a CLI tool designed to generate a comprehensive report 
 
 ## Installation
 
-### Prerequisites
 
-- Python 3.11+
-- [Poetry](https://python-poetry.org/docs/#installation) for dependency management (if installing from source)
-
-### Using Pip
-
-Install Copcon via pip:
+Install Copcon:
 
 ```bash
 pip install copcon
-```
 
-### From Source
-
-Clone the repository and install dependencies using Poetry:
-
-```bash
-git clone https://github.com/kasperjunge/copcon.git
-cd copcon
-poetry install
 ```
 
 ## Usage
@@ -90,7 +63,7 @@ copcon /path/to/your/project
 
 ### Example Commands
 
-#### Generate a Report with Default Settings
+#### Generate a Report with Default Settings (most commonly used)
 
 ```bash
 copcon /path/to/your/project
@@ -191,7 +164,7 @@ sudo apt install xclip
 
 ### Setting Up the Development Environment
 
-1. Ensure you have Python 3.11+ and Poetry installed.
+1. Ensure you have Python 3.11+ and uv installed.
 2. Clone the repository:
 
     ```bash
@@ -202,13 +175,13 @@ sudo apt install xclip
 3. Install dependencies:
 
     ```bash
-    poetry install
+    uv sync
     ```
 
 4. Run tests:
 
     ```bash
-    poetry run pytest
+    uv run pytest
     ```
 
 
