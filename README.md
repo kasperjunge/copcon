@@ -2,7 +2,7 @@
 
 <div style="display: flex; gap: 10px;">
   <a href="https://github.com/kasperjunge/copcon/actions">
-    <img src="https://github.com/kasperjunge/copcon/actions/workflows/publish.yml/badge.svg" alt="Build Status">
+    <img src="https://github.com/kasperjunge/copcon/actions/workflows/publish-pypi.yml/badge.svg" alt="Build Status">
   </a>
   <a href="LICENSE">
     <img src="https://img.shields.io/badge/License-MIT-yellow.svg" alt="License: MIT">
