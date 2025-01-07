@@ -60,7 +60,7 @@ def main(
 
             file_name = Path(rel_path).name
             if "." in file_name:
-                idx = file_name.index(".")
+                idx = file_name.rindex(".")
                 extension = file_name[idx:]
             else:
                 extension = "(no extension)"
