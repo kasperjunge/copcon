@@ -12,6 +12,7 @@ dependencies = [
     "pathspec>=0.12.1,<1.0.0",
     "pyperclip>=1.8.2,<2.0.0",
     'pywin32>=308,<309; platform_system == "Windows"',
+    "tiktoken>=0.8.0",
 ]
 
 include = [
