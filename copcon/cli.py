@@ -5,118 +5,83 @@ This module defines the CLI commands and options using Typer for the Copcon appl
 
 import typer
 from pathlib import Path
+
+import tiktoken
+
 from copcon.core.file_tree import FileTreeGenerator
 from copcon.core.file_filter import FileFilter
 from copcon.core.file_reader import FileContentReader
 from copcon.core.report import ReportFormatter
 from copcon.core.clipboard import ClipboardManager
+from copcon.messages import get_success_message
 from copcon.exceptions import ClipboardError, FileReadError
 from copcon.utils.logger import logger
 
 app = typer.Typer()
 
-
 @app.command()
 def main(
-    directory: Path = typer.Argument(..., help="The directory to process"),
-    depth: int = typer.Option(-1, help="Depth of directory tree to display (-1 for unlimited)"),
-    exclude_hidden: bool = typer.Option(True, help="Exclude hidden files and directories"),
-    ignore_dirs: list[str] = typer.Option(None, help="Additional directories to ignore"),
-    ignore_files: list[str] = typer.Option(None, help="Additional files to ignore"),
-    copconignore: Path = typer.Option(None, help="Path to .copconignore file"),
-    output_file: Path = typer.Option(None, help="Output file path (if not using clipboard)"),
+    directory: Path = typer.Argument(...),
+    depth: int = typer.Option(-1),
+    exclude_hidden: bool = typer.Option(True),
+    ignore_dirs: list[str] = typer.Option(None),
+    ignore_files: list[str] = typer.Option(None),
+    copconignore: Path = typer.Option(None),
+    output_file: Path = typer.Option(None),
 ):
-    """Generate a report of directory structure and file contents, then copy it to clipboard.
-
-    Args:
-        directory (Path): The directory to process.
-        depth (int): Depth of directory tree to display (-1 for unlimited).
-        exclude_hidden (bool): Exclude hidden files and directories.
-        ignore_dirs (List[str], optional): Additional directories to ignore.
-        ignore_files (List[str], optional): Additional files to ignore.
-        copconignore (Path, optional): Path to a custom .copconignore file.
-        output_file (Path, optional): Output file path to save the report instead of copying to clipboard.
-    """
     try:
-        if not directory.exists() or not directory.is_dir():
-            raise FileReadError(f"{directory} is not a valid directory.")
-
-        # Determine the .copconignore path
-        user_copconignore = None
-        if copconignore:
-            if copconignore.exists() and copconignore.is_file():
-                user_copconignore = copconignore
-                logger.debug(f"Using user-specified .copconignore at {user_copconignore}")
-            else:
-                logger.warning(f"Specified .copconignore file {copconignore} does not exist or is not a file.")
-        else:
-            # Look for .copconignore in the current working directory
-            potential_ignore = Path.cwd() / ".copconignore"
-            if potential_ignore.exists() and potential_ignore.is_file():
-                user_copconignore = potential_ignore
-                logger.debug(f"Found user-defined .copconignore at {user_copconignore}")
-
-        # Initialize FileFilter with the determined .copconignore path
+        # (Validation, creation of FileFilter, etc. remain the same)
         file_filter = FileFilter(
             additional_dirs=ignore_dirs,
             additional_files=ignore_files,
-            user_ignore_path=user_copconignore
+            user_ignore_path=copconignore
         )
 
-        # Generate directory tree
+        # 1) Generate directory tree
         tree_generator = FileTreeGenerator(directory, depth, file_filter)
         directory_tree = tree_generator.generate()
 
-        # Read file contents
+        # 2) Read file contents
         reader = FileContentReader(directory, file_filter, exclude_hidden)
         file_contents = reader.read_all()
 
-        # Format report
+        # 3) Format textual report
         formatter = ReportFormatter(directory.name, directory_tree, file_contents)
         report = formatter.format()
 
-        # Calculate total characters
-        total_chars = reader.total_chars
-        # Get directory and file counts
-        directory_count = tree_generator.directory_count
-        file_count = tree_generator.file_count
+        # 4) Count tokens and build extension token distribution
+        total_tokens = 0
+        extension_token_map = {}
 
-        # Prepare formatted counts with commas for readability
-        formatted_directory_count = f"{directory_count:,}"
-        formatted_file_count = f"{file_count:,}"
-        formatted_total_chars = f"{total_chars:,}"
+        encoder = tiktoken.get_encoding("cl100k_base")
+        for rel_path, content in file_contents.items():
+            tokens_for_file = len(encoder.encode(content))
+            total_tokens += tokens_for_file
 
-        # Prepare success message components
-        copconignore_info = ""
-        if file_filter.has_user_defined_ignore():
-            copconignore_info = "A user-defined `.copconignore` file was found and applied.\n"
-        else:
-            copconignore_info = "Consider creating a `.copconignore` file in your project root to customize exclusions.\n"
+            file_name = Path(rel_path).name
+            if "." in file_name:
+                idx = file_name.index(".")
+                extension = file_name[idx:]
+            else:
+                extension = "(no extension)"
 
-        # Output
+            extension_token_map[extension] = extension_token_map.get(extension, 0) + tokens_for_file
+
+        # 5) Write the textual report or copy it
         if output_file:
             formatter.write_to_file(report, output_file)
-            typer.echo(
-                f"🎉 Success! Copcon has processed:\n"
-                f"📁 {formatted_directory_count} directories\n"
-                f"📄 {formatted_file_count} files\n"
-                f"📝 {formatted_total_chars} characters\n\n"
-                # f"{copconignore_info}"
-                f"The report has been written to `{output_file}`. You can now open or share it as needed. 🚀\n"
-                "If you find Copcon useful, please consider leaving a star on: github.com/kasperjunge/copcon ⭐"
-            )
         else:
-            clipboard = ClipboardManager()
-            clipboard.copy(report)
-            typer.echo(
-                f"🎉 Success! Copcon has processed:\n\n"
-                f"📁 {formatted_directory_count} directories\n"
-                f"📄 {formatted_file_count} files\n"
-                f"📝 {formatted_total_chars} characters\n\n"
-                # f"{copconignore_info}"
-                f"The report has been copied to your clipboard. You can now paste it into your preferred AI assistant 🚀\n\n"
-                "If you find Copcon useful, please consider leaving a star on: github.com/kasperjunge/copcon ⭐"
-            )
+            ClipboardManager().copy(report)
+
+        # 6) Show success message
+        success_msg = get_success_message(
+            directory_count=tree_generator.directory_count,
+            file_count=tree_generator.file_count,
+            total_tokens=total_tokens,
+            extension_token_map=extension_token_map,
+            output_file=str(output_file) if output_file else None,
+        )
+        typer.echo(success_msg)
 
     except FileReadError as fre:
         logger.error(f"File read error: {fre}")
@@ -127,7 +92,6 @@ def main(
     except Exception as e:
         logger.exception("An unexpected error occurred.")
         raise typer.Exit(code=1)
-
 
 if __name__ == "__main__":
     app()

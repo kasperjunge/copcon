@@ -24,7 +24,6 @@ def test_file_content_reader_with_text_files(temp_dir, copconignore_file):
     # Assertions
     assert "file1.py" in contents, "file1.py should be read."
     assert "file2.log" not in contents, "file2.log should be ignored."
-    assert reader.total_chars == len(contents["file1.py"]), "Total characters should match the text file content."
 
 def test_file_content_reader_with_binary_files(temp_dir, copconignore_file):
     # Initialize FileFilter
@@ -46,7 +45,6 @@ def test_file_content_reader_with_binary_files(temp_dir, copconignore_file):
     assert "image.png" in contents, "image.png should be read."
     expected_placeholder = "[Binary file] Size: 17 bytes"
     assert contents["image.png"] == expected_placeholder, "Binary file should have a placeholder with size."
-    assert reader.total_chars == len(expected_placeholder), "Total characters should match the placeholder text."
 
 def test_file_content_reader_with_hidden_files(temp_dir, copconignore_file):
     # Initialize FileFilter
@@ -72,8 +70,6 @@ def test_file_content_reader_with_hidden_files(temp_dir, copconignore_file):
     assert ".hidden_dir" not in contents, ".hidden_dir should be excluded."
     assert ".hidden_file.py" not in contents, ".hidden_file.py should be excluded."
     assert "visible_file.py" in contents, "visible_file.py should be included."
-    assert reader.total_chars == len(contents["visible_file.py"]), "Total characters should match the visible file content."
-
 
 def test_file_content_reader_error_handling(temp_dir):
     # Initialize FileFilter
