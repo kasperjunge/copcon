@@ -19,7 +19,7 @@ from copcon.utils.logger import logger
 
 app = typer.Typer()
 
-@app.command()
+@app.command(no_args_is_help=True)
 def main(
     directory: Path = typer.Argument(...),
     depth: int = typer.Option(-1),

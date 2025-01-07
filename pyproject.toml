@@ -1,6 +1,6 @@
 [project]
 name = "copcon"
-version = "0.3.8"
+version = "0.3.9"
 description = ""
 readme = "README.md"
 requires-python = ">=3.11,<4.0"

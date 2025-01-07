@@ -1,0 +1,5 @@
+docs/
+.env
+.venv/
+__pycache__/
+dist/
