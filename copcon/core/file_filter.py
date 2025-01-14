@@ -4,12 +4,13 @@ This module provides functionality to filter files and directories based on igno
 specified in `.copconignore` files and additional user-defined patterns.
 """
 
-from pathlib import Path
-from typing import List, Set, Optional, Tuple
 import pathspec
+
+from pathlib import Path
+from typing import List, Optional
 from copcon.exceptions import FileReadError
 from copcon.utils.logger import logger
-import importlib.resources as pkg_resources
+from copcon.core.data import read_copconignore_patterns, default_copconignore_path
 
 
 class FileFilter:
@@ -38,20 +39,19 @@ class FileFilter:
         """
         # Load internal patterns
         self.ignore_spec = self._load_internal_copconignore()
-        self.user_defined = False  # Flag to indicate if user-defined .copconignore was loaded
 
         # Load user-specified patterns if any
         if user_ignore_path and user_ignore_path.exists():
             try:
-                with user_ignore_path.open() as f:
-                    user_patterns = [line.strip() for line in f if line.strip() and not line.startswith("#")]
+                user_patterns = read_copconignore_patterns(user_ignore_path)
                 user_spec = pathspec.PathSpec.from_lines("gitwildmatch", user_patterns)
                 self.ignore_spec = self.ignore_spec + user_spec  # Merge user patterns
-                self.user_defined = True  # Set flag as user-defined .copconignore is loaded
                 logger.debug(f"Loaded user ignore patterns from {user_ignore_path}")
             except Exception as e:
                 logger.error(f"Error reading user ignore file {user_ignore_path}: {e}")
-                raise FileReadError(f"Error reading user ignore file {user_ignore_path}: {e}")
+                raise FileReadError(
+                    f"Error reading user ignore file {user_ignore_path}: {e}"
+                )
 
         # Add additional directories and files to ignore
         if additional_dirs:
@@ -75,8 +75,7 @@ class FileFilter:
         """
 
         try:
-            with pkg_resources.open_text('copcon.core', '.copconignore') as f:
-                patterns = [line.strip() for line in f if line.strip() and not line.startswith("#")]
+            patterns = read_copconignore_patterns(default_copconignore_path)
             spec = pathspec.PathSpec.from_lines("gitwildmatch", patterns)
             logger.debug("Loaded internal .copconignore patterns.")
             return spec
@@ -106,11 +105,3 @@ class FileFilter:
         if path.is_file() and path.name in self.ignore_files:
             return True
         return False
-
-    def has_user_defined_ignore(self) -> bool:
-        """Check if a user-defined .copconignore was loaded.
-
-        Returns:
-            bool: True if a user-defined .copconignore was loaded, False otherwise.
-        """
-        return self.user_defined
