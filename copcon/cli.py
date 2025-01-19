@@ -15,7 +15,8 @@ from copcon.exceptions import ClipboardError, FileReadError
 from copcon.utils.logger import logger
 
 
-app = typer.Typer()
+app = typer.Typer(name="copcon", help="Test")
+
 
 @app.command(no_args_is_help=True)
 def main(
@@ -53,7 +54,7 @@ def main(
         file_filter = FileFilter(
             additional_dirs=ignore_dirs,
             additional_files=ignore_files,
-            user_ignore_path=copconignore
+            user_ignore_path=copconignore,
         )
 
         # Generate directory tree
@@ -84,7 +85,9 @@ def main(
             else:
                 extension = "(no extension)"
 
-            extension_token_map[extension] = extension_token_map.get(extension, 0) + tokens_for_file
+            extension_token_map[extension] = (
+                extension_token_map.get(extension, 0) + tokens_for_file
+            )
 
         # Write or copy the textual report
         if output_file:
@@ -99,7 +102,9 @@ def main(
             total_tokens=total_tokens,
             extension_token_map=extension_token_map,
             output_file=str(output_file) if output_file else None,
-            copconignore_path=str(used_copconignore_path) if used_copconignore_path else None,
+            copconignore_path=(
+                str(used_copconignore_path) if used_copconignore_path else None
+            ),
         )
         typer.echo(success_msg)
 
@@ -112,6 +117,7 @@ def main(
     except Exception as e:
         logger.exception("An unexpected error occurred.")
         raise typer.Exit(code=1)
+
 
 if __name__ == "__main__":
     app()
