@@ -9,7 +9,7 @@ from copcon.core.file_filter import FileFilter
 from copcon.core.file_reader import FileContentReader
 from copcon.core.report import ReportFormatter
 from copcon.core.clipboard import ClipboardManager
-from copcon.core.autodiscover import discover_copconignore
+from copcon.core.autodiscover import discover_copconignore, discover_copcontarget
 from copcon.messages import get_success_message
 from copcon.exceptions import ClipboardError, FileReadError
 from copcon.utils.logger import logger
@@ -34,6 +34,7 @@ def main(
       - If --copconignore is passed, we use that path directly.
       - Otherwise, we try discover_copconignore(directory) to see if there's a .copconignore.
       - If none is found, we only apply internal .copconignore patterns.
+      - Additionally, if a .copcontarget is discovered, it's applied before .copconignore.
     """
 
     # Keep track of the actual .copconignore path we end up using
@@ -45,15 +46,19 @@ def main(
         if discovered:
             copconignore = discovered  # use the discovered path
 
+    # Discover .copcontarget
+    discovered_target = discover_copcontarget(directory)
+
     # Assign final used path
     used_copconignore_path = copconignore
 
     try:
-        # Build a FileFilter
+        # Build a FileFilter with target support
         file_filter = FileFilter(
             additional_dirs=ignore_dirs,
             additional_files=ignore_files,
-            user_ignore_path=copconignore
+            user_ignore_path=copconignore,
+            user_target_path=discovered_target
         )
 
         # Generate directory tree
@@ -100,6 +105,7 @@ def main(
             extension_token_map=extension_token_map,
             output_file=str(output_file) if output_file else None,
             copconignore_path=str(used_copconignore_path) if used_copconignore_path else None,
+            copcontarget_path=str(discovered_target) if discovered_target else None,
         )
         typer.echo(success_msg)
 

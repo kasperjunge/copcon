@@ -14,6 +14,7 @@ def get_success_message(
     extension_token_map: Dict[str, int],
     output_file: Optional[str],
     copconignore_path: Optional[str] = None,
+    copcontarget_path: Optional[str] = None,
 ) -> str:
     """
     Generate the final success message for Copcon.
@@ -52,19 +53,22 @@ def get_success_message(
         f"{extension_table}\n\n"
     )
 
-    # 4) If a .copconignore file is in use, mention it
+    # 4) If a .copcontarget file is in use, mention it
+    if copcontarget_path:
+        base_msg += f"Using `.copcontarget` from: {copcontarget_path}\n"
+    # 5) If a .copconignore file is in use, mention it
     if copconignore_path:
         base_msg += f"Using `.copconignore` from: {copconignore_path}\n"
 
-    # 5) Mention how the report is delivered
+    # 6) Mention how the report is delivered
     if output_file:
-        base_msg += "The report has been written to " f"`{output_file}`. 🚀\n"
+        base_msg += f"\nThe report has been written to `{output_file}` 🚀\n"
     else:
-        base_msg += "The report has been copied to your clipboard. 🚀\n"
+        base_msg += "\nThe report has been copied to your clipboard 🚀\n"
 
-    # 6) Parenthetical postscript for the GitHub star
+    # 7) Parenthetical postscript for the GitHub star
     base_msg += (
-        "\n(PS: If you find Copcon useful, please star us at "
+        "\n(PS: If you find Copcon useful, please star it at "
         "github.com/kasperjunge/copcon ⭐️)"
     )
 
