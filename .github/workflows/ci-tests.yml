@@ -1,0 +1,19 @@
+name: Run Tests
+
+on:
+  pull_request:
+    branches:
+      - main
+  push:
+    branches:
+      - main
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Setup CI Environment for Testing
+        uses: ./.github/actions/setup-ci
+
+      - name: Run tests
+        run: uv run pytest
