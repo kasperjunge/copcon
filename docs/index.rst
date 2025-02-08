@@ -10,8 +10,9 @@ This is Copcon!
 
 .. toctree::
    :maxdepth: 1
-   :caption: Modules:
+   :caption: Contents:
 
+   source/getting_started
    source/cli
    source/core/index
    source/utils/index
