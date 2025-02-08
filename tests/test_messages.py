@@ -32,7 +32,7 @@ def test_get_success_message_with_output_file():
     assert "(no extension)" in message   # The extension label
     assert ".py" in message
     assert ".txt" in message
-    assert "File Extension" in message
+    assert "Content Source" in message
     assert "Token Distribution" in message
 
     # We should see "The report has been written to"
@@ -67,7 +67,7 @@ def test_get_success_message_no_output_file():
     assert "999 tokens" in message
     assert ".tar.gz" in message
     assert ".py" in message
-    assert "File Extension" in message
+    assert "Content Source" in message
     assert "Token Distribution" in message
 
     # We should see "The report has been copied to your clipboard" for the clipboard version
@@ -97,9 +97,32 @@ def test_get_success_message_empty_extensions():
     assert "0 directories" in message
     assert "0 files" in message
     assert "0 tokens" in message
-    assert "File Extension" in message
+    assert "Content Source" in message
     assert "Token Distribution" in message
     # The table should be present but have 'Total' row at least
     assert "Total" in message
     # Because no output_file => the message should mention clipboard
     assert "report has been copied to your clipboard" in message
+
+def test_get_success_message_with_git_diff_entry():
+    """
+    Test that the success message correctly reflects the updated token distribution table,
+    including a "git diff" row and a header named "Content Source".
+    """
+    from copcon.messages import get_success_message
+
+    extension_token_map = {
+        "*.py": 800,
+        "git diff": 200
+    }
+    message = get_success_message(
+        directory_count=2,
+        file_count=3,
+        total_tokens=1000,
+        extension_token_map=extension_token_map,
+        output_file="report.txt"
+    )
+    # Check that the header is now "Content Source"
+    assert "Content Source" in message
+    # Check that there is a row for "git diff"
+    assert "git diff" in message

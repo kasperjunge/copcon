@@ -8,13 +8,7 @@ on:
       - 'README.md'
       - '.gitignore'
       - 'docs/**'
-  pull_request:
-    branches:
-      - main
-    paths-ignore:
-      - 'README.md'
-      - '.gitignore'
-      - 'docs/**'
+  workflow_dispatch:
 
 jobs:
   test:
@@ -23,19 +17,13 @@ jobs:
       matrix:
         python-version: ['3.11']
     steps:
-      - name: Check out code
+      - name: Checkout code
         uses: actions/checkout@v4
 
-      - name: Install uv
-        uses: astral-sh/setup-uv@v5
+      - name: Setup CI Environment for Testing
+        uses: .github/actions/setup-ci
         with:
-          enable-cache: true
-
-      - name: Set up Python ${{ matrix.python-version }}
-        run: uv python install ${{ matrix.python-version }}
-
-      - name: Install dependencies
-        run: uv sync
+          python-version: ${{ matrix.python-version }}
 
       - name: Run tests
         run: uv run pytest
@@ -44,19 +32,13 @@ jobs:
     runs-on: ubuntu-latest
     needs: test
     steps:
-      - name: Check out code
+      - name: Checkout code
         uses: actions/checkout@v4
 
-      - name: Install uv
-        uses: astral-sh/setup-uv@v5
+      - name: Setup CI Environment for Publishing
+        uses: .github/actions/setup-ci
         with:
-          enable-cache: true
-
-      - name: Set up Python
-        run: uv python install 3.11
-
-      - name: Install dependencies
-        run: uv sync
+          python-version: "3.11"
 
       - name: Build package
         run: uv build

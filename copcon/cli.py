@@ -1,7 +1,6 @@
-# copcon/cli.py
-
 import typer
 from pathlib import Path
+import subprocess
 import tiktoken
 
 from copcon.core.file_tree import FileTreeGenerator
@@ -14,7 +13,6 @@ from copcon.messages import get_success_message
 from copcon.exceptions import ClipboardError, FileReadError
 from copcon.utils.logger import logger
 
-
 app = typer.Typer()
 
 @app.command(no_args_is_help=True)
@@ -26,6 +24,7 @@ def main(
     ignore_files: list[str] = typer.Option(None),
     copconignore: Path = typer.Option(None),
     output_file: Path = typer.Option(None),
+    git_diff: bool = typer.Option(False, "-g", "--git-diff", help="Include git diff in the context report")
 ):
     """
     Copcon CLI entry point.
@@ -35,6 +34,8 @@ def main(
       - Otherwise, we try discover_copconignore(directory) to see if there's a .copconignore.
       - If none is found, we only apply internal .copconignore patterns.
       - Additionally, if a .copcontarget is discovered, it's applied before .copconignore.
+      - If the --git-diff flag is provided, the output of 'git diff HEAD' will be appended
+        to the context report and its token count added to the token spend report.
     """
 
     # Keep track of the actual .copconignore path we end up using
@@ -69,9 +70,25 @@ def main(
         reader = FileContentReader(directory, file_filter, exclude_hidden)
         file_contents = reader.read_all()
 
-        # Format textual report
+        # Format the textual report from file structure and contents
         formatter = ReportFormatter(directory.name, directory_tree, file_contents)
         report = formatter.format()
+
+        # If git_diff flag is enabled, run git diff and append its output
+        git_diff_output = ""
+        if git_diff:
+            try:
+                result = subprocess.run(
+                    ["git", "diff", "HEAD"],
+                    cwd=directory,
+                    capture_output=True,
+                    text=True,
+                    check=True
+                )
+                git_diff_output = result.stdout.strip()
+            except Exception as e:
+                git_diff_output = f"[Git diff could not be generated: {e}]"
+            report += "\n\nGit Diff:\n" + git_diff_output
 
         # Count tokens & build extension token distribution
         total_tokens = 0
@@ -85,11 +102,17 @@ def main(
             file_name = Path(rel_path).name
             if "." in file_name:
                 idx = file_name.rindex(".")
-                extension = file_name[idx:]
+                extension = f"*{file_name[idx:]}"  # use wildcard to indicate all such files
             else:
                 extension = "(no extension)"
 
             extension_token_map[extension] = extension_token_map.get(extension, 0) + tokens_for_file
+
+        # If git diff output is present, count its tokens and add to the token map
+        if git_diff:
+            tokens_for_git_diff = len(encoder.encode(git_diff_output))
+            total_tokens += tokens_for_git_diff
+            extension_token_map["git diff"] = tokens_for_git_diff
 
         # Write or copy the textual report
         if output_file:
@@ -97,7 +120,7 @@ def main(
         else:
             ClipboardManager().copy(report)
 
-        # Display success message
+        # Display success message with updated token spend report
         success_msg = get_success_message(
             directory_count=tree_generator.directory_count,
             file_count=tree_generator.file_count,
@@ -121,3 +144,4 @@ def main(
 
 if __name__ == "__main__":
     app()
+
