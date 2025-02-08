@@ -17,6 +17,9 @@ jobs:
       matrix:
         python-version: ['3.11']
     steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
       - name: Setup CI Environment for Testing
         uses: ./.github/actions/setup-ci
         with:
@@ -29,6 +32,9 @@ jobs:
     runs-on: ubuntu-latest
     needs: test
     steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
       - name: Setup CI Environment for Publishing
         uses: ./.github/actions/setup-ci
         with:
