@@ -12,9 +12,7 @@
   </a>
 </div>
 
-
 Copcon is a CLI tool that effortlessly copies your project's directory structure and file contents directly to the clipboard, ideal for working with AI chatbots.
-
 
 [Read the docs here](https://kasperjunge.github.io/copcon/)
 
@@ -30,12 +28,15 @@ Copcon (Copy Context) is a CLI tool designed to generate a comprehensive report 
 - **Exclusion Options**: Exclude hidden files/directories and specify additional patterns to ignore.
 - **Clipboard Integration**: Optionally copy the generated report directly to the clipboard.
 - **File Output**: Save the report to a specified file instead of copying to the clipboard.
+- **Git Diff Integration**:  
+  - Use the new `-g` (or `--git-diff`) flag to include the output of a `git diff` (showing changes since the last commit) in your context report.
+  - The diff output is appended to the end of the report under a clear "Git Diff:" header.
+  - Additionally, the token count for the git diff is calculated and included in the token distribution summary, so you can see how much of the overall token usage is consumed by the diff.
 
 ## Installation
 
 ```bash
 pip install copcon
-
 ```
 
 ## Usage
@@ -58,6 +59,8 @@ copcon /path/to/your/project
 - `--ignore-files TEXT`: Additional files to ignore. Can be used multiple times.
 - `--copconignore PATH`: Path to a custom `.copconignore` file.
 - `--output-file PATH`: Specify an output file path to save the report instead of copying to the clipboard.
+- `-g, --git-diff`: Include the current git diff (changes since the last commit) in the context report.  
+  The git diff is appended to the report and its token count is included in the token distribution table.
 
 ### Example Commands
 
@@ -77,6 +80,12 @@ copcon /path/to/your/project --depth 2 --ignore-dirs tests --ignore-files *.md
 
 ```bash
 copcon /path/to/your/project --output-file report.txt
+```
+
+#### Include Git Diff in the Report
+
+```bash
+copcon /path/to/your/project --git-diff
 ```
 
 ## .copconignore Configuration
@@ -140,6 +149,11 @@ File: main.py
 ----------------------------------------
 [Content of main.py]
 ----------------------------------------
+
+Git Diff:
+----------------------------------------
+[Output of `git diff` will be appended here if the -g/--git-diff flag is used]
+----------------------------------------
 ```
 
 ## Platform Support
@@ -182,7 +196,6 @@ sudo apt install xclip
     uv run pytest
     ```
 
-
 ## Contributing
 
 Contributions are welcome. Please follow these steps to contribute:
@@ -206,7 +219,3 @@ Contributions are welcome. Please follow these steps to contribute:
 ## License
 
 This project is licensed under the [MIT License](LICENSE).
-
-## Changelog
-
-All notable changes to this project are documented in the [CHANGELOG](CHANGELOG.md).
