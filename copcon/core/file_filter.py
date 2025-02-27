@@ -1,12 +1,12 @@
 """File Filtering for Copcon.
 
 This module provides functionality to filter files and directories based on ignore patterns
-specified in `.copconignore` files and additional user-defined patterns. It also supports
-a `.copcontarget` file to target specific directories and files.
+specified in `.copconignore` files. It also supports a `.copcontarget` file to target 
+specific directories and files.
 """
 
 from pathlib import Path
-from typing import List, Optional
+from typing import Optional
 import pathspec
 from copcon.exceptions import FileReadError
 from copcon.utils.logger import logger
@@ -16,14 +16,12 @@ import importlib.resources as pkg_resources
 class FileFilter:
     """Filters files and directories based on ignore and target patterns.
 
-    Combines internal, user-specified ignore patterns, and target patterns to determine
+    Combines internal and user-specified ignore patterns, and target patterns to determine
     whether a file or directory should be excluded from processing.
     """
 
     def __init__(
         self,
-        additional_dirs: Optional[List[str]] = None,
-        additional_files: Optional[List[str]] = None,
         user_ignore_path: Optional[Path] = None,
         user_target_path: Optional[Path] = None,
     ):
@@ -31,8 +29,6 @@ class FileFilter:
         Initialize the FileFilter.
 
         Args:
-            additional_dirs (List[str], optional): Additional directory names to ignore.
-            additional_files (List[str], optional): Additional file names to ignore.
             user_ignore_path (Path, optional): Path to a user-specified `.copconignore` file.
             user_target_path (Path, optional): Path to a user-specified `.copcontarget` file.
 
@@ -70,17 +66,6 @@ class FileFilter:
             except Exception as e:
                 logger.error(f"Error reading user target file {user_target_path}: {e}")
                 raise FileReadError(f"Error reading user target file {user_target_path}: {e}")
-
-        # Add additional directories and files to ignore
-        if additional_dirs:
-            self.ignore_dirs = set(additional_dirs)
-        else:
-            self.ignore_dirs = set()
-
-        if additional_files:
-            self.ignore_files = set(additional_files)
-        else:
-            self.ignore_files = set()
 
     def _load_internal_copconignore(self) -> pathspec.PathSpec:
         """Load internal ignore patterns from the package's .copconignore file.
@@ -123,11 +108,6 @@ class FileFilter:
         if self.ignore_spec.match_file(path_str):
             return True
 
-        # Check additional directories and files
-        if path.is_dir() and path.name in self.ignore_dirs:
-            return True
-        if path.is_file() and path.name in self.ignore_files:
-            return True
         return False
 
     def has_user_defined_ignore(self) -> bool:

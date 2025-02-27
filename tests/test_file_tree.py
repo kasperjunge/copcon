@@ -4,8 +4,6 @@ from copcon.core.file_filter import FileFilter
 def test_file_tree_with_no_ignores(temp_dir):
     # Initialize FileFilter with no ignore patterns
     file_filter = FileFilter(
-        additional_dirs=None,
-        additional_files=None,
         user_ignore_path=None
     )
     
