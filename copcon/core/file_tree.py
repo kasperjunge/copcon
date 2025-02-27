@@ -65,19 +65,31 @@ class FileTreeGenerator:
             output.append(f"{prefix}Error accessing {current_dir}: {e}")
             return "\n".join(output)
 
-        visible_contents = [path for path in contents if not self.file_filter.should_ignore(path)]
-
-        for i, path in enumerate(visible_contents):
-            is_last = i == len(visible_contents) - 1
-            connector = "└── " if is_last else "├── "
-            output.append(f"{prefix}{connector}{path.name}")
+        # Build list of items to show:
+        visible_items = []
+        for path in contents:
             if path.is_dir():
-                self.directory_count += 1  # Increment directory count
-                extension = "    " if is_last else "│   "
-                subtree = self.generate(path, current_depth + 1, prefix + extension)
-                if subtree:
-                    output.append(subtree)
-            else:
-                self.file_count += 1  # Increment file count
+                visible_items.append(path)
+            elif path.is_file():
+                if not self.file_filter.should_ignore(path):
+                    visible_items.append(path)
 
+        for i, path in enumerate(visible_items):
+            is_last = i == len(visible_items) - 1
+            connector = "└── " if is_last else "├── "
+            if path.is_dir():
+                # Always count directories
+                self.directory_count += 1
+                if self.file_filter.should_ignore(path):
+                    # Mark the directory as ignored and do not descend
+                    output.append(f"{prefix}{connector}{path.name}/ (contents not displayed)")
+                else:
+                    output.append(f"{prefix}{connector}{path.name}/")
+                    extension = "    " if is_last else "│   "
+                    subtree = self.generate(path, current_depth + 1, prefix + extension)
+                    if subtree:
+                        output.append(subtree)
+            else:
+                self.file_count += 1  # Count file
+                output.append(f"{prefix}{connector}{path.name}")
         return "\n".join(output)

@@ -13,6 +13,7 @@ target/
 bin/
 obj/
 publish/
+docs/
 
 # Default files to ignore
 poetry.lock
