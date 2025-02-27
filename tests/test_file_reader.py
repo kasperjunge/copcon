@@ -6,8 +6,6 @@ from copcon.exceptions import FileReadError
 def test_file_content_reader_with_text_files(temp_dir, copconignore_file):
     # Initialize FileFilter
     file_filter = FileFilter(
-        additional_dirs=None,
-        additional_files=None,
         user_ignore_path=copconignore_file
     )
     
@@ -28,8 +26,6 @@ def test_file_content_reader_with_text_files(temp_dir, copconignore_file):
 def test_file_content_reader_with_binary_files(temp_dir, copconignore_file):
     # Initialize FileFilter
     file_filter = FileFilter(
-        additional_dirs=None,
-        additional_files=None,
         user_ignore_path=copconignore_file
     )
     
@@ -49,8 +45,6 @@ def test_file_content_reader_with_binary_files(temp_dir, copconignore_file):
 def test_file_content_reader_with_hidden_files(temp_dir, copconignore_file):
     # Initialize FileFilter
     file_filter = FileFilter(
-        additional_dirs=None,
-        additional_files=None,
         user_ignore_path=None  # No user-specified ignore
     )
     
@@ -74,8 +68,6 @@ def test_file_content_reader_with_hidden_files(temp_dir, copconignore_file):
 def test_file_content_reader_error_handling(temp_dir):
     # Initialize FileFilter
     file_filter = FileFilter(
-        additional_dirs=None,
-        additional_files=None,
         user_ignore_path=None
     )
     
