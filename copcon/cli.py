@@ -20,8 +20,6 @@ def main(
     directory: Path = typer.Argument(...),
     depth: int = typer.Option(-1),
     exclude_hidden: bool = typer.Option(True),
-    ignore_dirs: list[str] = typer.Option(None),
-    ignore_files: list[str] = typer.Option(None),
     copconignore: Path = typer.Option(None),
     output_file: Path = typer.Option(None),
     git_diff: bool = typer.Option(False, "-g", "--git-diff", help="Include git diff in the context report")
@@ -56,8 +54,6 @@ def main(
     try:
         # Build a FileFilter with target support
         file_filter = FileFilter(
-            additional_dirs=ignore_dirs,
-            additional_files=ignore_files,
             user_ignore_path=copconignore,
             user_target_path=discovered_target
         )
